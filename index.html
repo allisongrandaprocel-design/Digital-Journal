@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Diario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- Lomo / spine sidebar -->
+    <aside class="spine">
+      <div class="spine-top">
+        <h1 class="brand">Mi Diario</h1>
+        <p class="tagline">un hilo por día</p>
+      </div>
+
+      <button id="new-entry-btn" class="btn-new">+ Nueva entrada</button>
+
+      <div class="search-wrap">
+        <input type="text" id="search-input" placeholder="Buscar en tus entradas…">
+      </div>
+
+      <nav class="entry-thread" id="entry-thread" aria-label="Lista de entradas">
+        <!-- entries injected here -->
+      </nav>
+
+      <div class="spine-bottom">
+        <button id="export-btn" class="btn-ghost">Exportar todo (.json)</button>
+        <label class="btn-ghost import-label">
+          Importar
+          <input type="file" id="import-input" accept="application/json" hidden>
+        </label>
+      </div>
+    </aside>
+
+    <!-- Page / editor -->
+    <main class="page" id="page">
+
+      <div class="page-inner">
+
+        <header class="entry-header">
+          <input type="text" id="entry-title" class="entry-title" placeholder="Título de la entrada">
+          <div class="entry-meta">
+            <span id="entry-date" class="entry-date"></span>
+            <div class="mood-picker" id="mood-picker" aria-label="Estado de ánimo">
+              <button class="mood-dot" data-mood="radiante" title="Radiante">●</button>
+              <button class="mood-dot" data-mood="tranquila" title="Tranquila">●</button>
+              <button class="mood-dot" data-mood="neutral" title="Neutral">●</button>
+              <button class="mood-dot" data-mood="cansada" title="Cansada">●</button>
+              <button class="mood-dot" data-mood="dificil" title="Difícil">●</button>
+            </div>
+          </div>
+        </header>
+
+        <div class="tags-row">
+          <input type="text" id="entry-tags" class="entry-tags" placeholder="etiquetas separadas por coma — ej. universidad, meliabeauty, gratitud">
+        </div>
+
+        <textarea id="entry-body" class="entry-body" placeholder="Escribe aquí... ¿qué pasó hoy? ¿qué sentiste? ¿qué aprendiste?"></textarea>
+
+        <footer class="entry-footer">
+          <span id="word-count" class="word-count">0 palabras</span>
+          <div class="footer-actions">
+            <button id="delete-btn" class="btn-danger">Eliminar</button>
+            <button id="save-btn" class="btn-save">Guardar</button>
+          </div>
+        </footer>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
