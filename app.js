@@ -21,6 +21,7 @@ const $saveBtn     = document.getElementById("save-btn");
 const $deleteBtn   = document.getElementById("delete-btn");
 const $exportBtn   = document.getElementById("export-btn");
 const $importInput = document.getElementById("import-input");
+const $statsLine   = document.getElementById("stats-line");
 
 const $title   = document.getElementById("entry-title");
 const $date    = document.getElementById("entry-date");
@@ -28,6 +29,14 @@ const $tags    = document.getElementById("entry-tags");
 const $body    = document.getElementById("entry-body");
 const $wordCount = document.getElementById("word-count");
 const $moodDots = document.querySelectorAll(".mood-dot");
+
+const $welcome   = document.getElementById("welcome");
+const $welcomeBtn = document.getElementById("welcome-btn");
+const $pageInner = document.getElementById("page-inner");
+
+const $menuToggle = document.getElementById("menu-toggle");
+const $spine       = document.getElementById("spine");
+const $scrim        = document.getElementById("scrim");
 
 let selectedMood = null;
 
@@ -114,11 +123,52 @@ function renderThread(filter = "") {
   });
 }
 
+/* ---------- mostrar editor vs. pantalla de bienvenida ---------- */
+function showEditor() {
+  $welcome.hidden = true;
+  $pageInner.hidden = false;
+}
+function showWelcome() {
+  $welcome.hidden = false;
+  $pageInner.hidden = true;
+}
+
+/* ---------- estadísticas (total de entradas + racha) ---------- */
+function updateStats() {
+  const total = entries.length;
+  if (total === 0) {
+    $statsLine.textContent = "";
+    return;
+  }
+
+  // días únicos con al menos una entrada (formato YYYY-MM-DD local)
+  const days = new Set(
+    entries.map(e => new Date(e.createdAt).toDateString())
+  );
+
+  // racha: cuenta días consecutivos hacia atrás desde hoy (o ayer)
+  let streak = 0;
+  let cursor = new Date();
+  // si hoy no hay entrada, empieza a contar desde ayer
+  if (!days.has(cursor.toDateString())) {
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  while (days.has(cursor.toDateString())) {
+    streak++;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  const entryWord = total === 1 ? "entrada" : "entradas";
+  const streakText = streak >= 2 ? ` · racha de ${streak} días` : "";
+  $statsLine.textContent = `${total} ${entryWord}${streakText}`;
+}
+
 /* ---------- editor ---------- */
 function openEntry(id) {
   const entry = entries.find(e => e.id === id);
   if (!entry) return;
   activeId = id;
+  showEditor();
 
   $title.value = entry.title || "";
   $date.textContent = formatDate(entry.createdAt);
@@ -128,6 +178,7 @@ function openEntry(id) {
   updateMoodUI();
   updateWordCount();
   renderThread($searchInput.value);
+  closeMobileMenu();
 }
 
 function newEntry() {
@@ -143,6 +194,7 @@ function newEntry() {
   entries.push(entry);
   persist();
   openEntry(entry.id);
+  updateStats();
   $title.focus();
 }
 
@@ -172,6 +224,7 @@ function saveCurrent() {
 
   persist();
   renderThread($searchInput.value);
+  updateStats();
   flashSaved();
 }
 
@@ -186,6 +239,14 @@ function deleteCurrent() {
   activeId = null;
   clearEditor();
   renderThread($searchInput.value);
+  updateStats();
+
+  if (entries.length === 0) {
+    showWelcome();
+  } else {
+    const latest = [...entries].sort((a, b) => b.createdAt - a.createdAt)[0];
+    openEntry(latest.id);
+  }
 }
 
 function clearEditor() {
@@ -197,6 +258,24 @@ function clearEditor() {
   updateMoodUI();
   updateWordCount();
 }
+
+/* ---------- menú móvil ---------- */
+function openMobileMenu() {
+  $spine.classList.add("open");
+  $scrim.hidden = false;
+  $scrim.classList.add("visible");
+  $menuToggle.setAttribute("aria-expanded", "true");
+}
+function closeMobileMenu() {
+  $spine.classList.remove("open");
+  $scrim.classList.remove("visible");
+  $menuToggle.setAttribute("aria-expanded", "false");
+  setTimeout(() => { $scrim.hidden = true; }, 200);
+}
+$menuToggle.addEventListener("click", () => {
+  $spine.classList.contains("open") ? closeMobileMenu() : openMobileMenu();
+});
+$scrim.addEventListener("click", closeMobileMenu);
 
 function flashSaved() {
   const original = $saveBtn.textContent;
@@ -274,11 +353,15 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+$welcomeBtn.addEventListener("click", newEntry);
+
 /* ---------- arranque ---------- */
 renderThread();
+updateStats();
 if (entries.length > 0) {
   const latest = [...entries].sort((a, b) => b.createdAt - a.createdAt)[0];
   openEntry(latest.id);
 } else {
   $date.textContent = formatDate(Date.now());
+  showWelcome();
 }
