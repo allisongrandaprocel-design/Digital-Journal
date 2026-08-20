@@ -3,26 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Mi Diario — un journal digital privado. Tus entradas se guardan solo en tu navegador.">
+<meta name="theme-color" content="#F6F4EE">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📓</text></svg>">
 <title>Mi Diario</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <a class="skip-link" href="#entry-title">Saltar al editor</a>
+
+  <!-- botón hamburguesa — solo visible en pantallas angostas -->
+  <button id="menu-toggle" class="menu-toggle" aria-label="Abrir lista de entradas" aria-expanded="false" aria-controls="spine">
+    <span></span><span></span><span></span>
+  </button>
+
   <div class="app">
 
+    <!-- overlay para cerrar el menú en móvil al tocar fuera -->
+    <div id="scrim" class="scrim" hidden></div>
+
     <!-- Lomo / spine sidebar -->
-    <aside class="spine">
+    <aside class="spine" id="spine">
       <div class="spine-top">
-        <h1 class="brand">Mi Diario</h1>
+        <h1 class="brand">📓 Mi Diario</h1>
         <p class="tagline">un hilo por día</p>
+        <p id="stats-line" class="stats-line" aria-live="polite"></p>
       </div>
 
-      <button id="new-entry-btn" class="btn-new">+ Nueva entrada</button>
+      <button id="new-entry-btn" class="btn-new" type="button">
+        <span aria-hidden="true">+</span> Nueva entrada
+      </button>
 
       <div class="search-wrap">
-        <input type="text" id="search-input" placeholder="Buscar en tus entradas…">
+        <label for="search-input" class="sr-only">Buscar en tus entradas</label>
+        <input type="text" id="search-input" placeholder="Buscar en tus entradas…" autocomplete="off">
       </div>
 
       <nav class="entry-thread" id="entry-thread" aria-label="Lista de entradas">
@@ -30,9 +48,9 @@
       </nav>
 
       <div class="spine-bottom">
-        <button id="export-btn" class="btn-ghost">Exportar todo (.json)</button>
+        <button id="export-btn" class="btn-ghost" type="button">⇩ Exportar todo (.json)</button>
         <label class="btn-ghost import-label">
-          Importar
+          ⇧ Importar
           <input type="file" id="import-input" accept="application/json" hidden>
         </label>
       </div>
@@ -41,33 +59,44 @@
     <!-- Page / editor -->
     <main class="page" id="page">
 
-      <div class="page-inner">
+      <!-- pantalla de bienvenida — se muestra cuando no hay ninguna entrada activa -->
+      <div class="welcome" id="welcome" hidden>
+        <span class="welcome-mark" aria-hidden="true">✎</span>
+        <h2 class="welcome-title">Tu primera hoja en blanco</h2>
+        <p class="welcome-text">Nadie más va a leer esto. Escribe lo que quieras — cómo te sentiste hoy, algo que aprendiste, o simplemente lo que pasó por tu cabeza.</p>
+        <button id="welcome-btn" class="btn-new" type="button">Empezar a escribir</button>
+      </div>
+
+      <div class="page-inner" id="page-inner">
 
         <header class="entry-header">
+          <label for="entry-title" class="sr-only">Título de la entrada</label>
           <input type="text" id="entry-title" class="entry-title" placeholder="Título de la entrada">
           <div class="entry-meta">
             <span id="entry-date" class="entry-date"></span>
-            <div class="mood-picker" id="mood-picker" aria-label="Estado de ánimo">
-              <button class="mood-dot" data-mood="radiante" title="Radiante">●</button>
-              <button class="mood-dot" data-mood="tranquila" title="Tranquila">●</button>
-              <button class="mood-dot" data-mood="neutral" title="Neutral">●</button>
-              <button class="mood-dot" data-mood="cansada" title="Cansada">●</button>
-              <button class="mood-dot" data-mood="dificil" title="Difícil">●</button>
+            <div class="mood-picker" id="mood-picker" role="group" aria-label="Estado de ánimo">
+              <button class="mood-dot" data-mood="radiante" type="button" aria-label="Radiante" title="Radiante">●</button>
+              <button class="mood-dot" data-mood="tranquila" type="button" aria-label="Tranquila" title="Tranquila">●</button>
+              <button class="mood-dot" data-mood="neutral" type="button" aria-label="Neutral" title="Neutral">●</button>
+              <button class="mood-dot" data-mood="cansada" type="button" aria-label="Cansada" title="Cansada">●</button>
+              <button class="mood-dot" data-mood="dificil" type="button" aria-label="Difícil" title="Difícil">●</button>
             </div>
           </div>
         </header>
 
         <div class="tags-row">
-          <input type="text" id="entry-tags" class="entry-tags" placeholder="etiquetas separadas por coma — ej. universidad, meliabeauty, gratitud">
+          <label for="entry-tags" class="sr-only">Etiquetas</label>
+          <input type="text" id="entry-tags" class="entry-tags" placeholder="etiquetas separadas por coma — ej. universidad, meliabeauty, gratitud" autocomplete="off">
         </div>
 
+        <label for="entry-body" class="sr-only">Contenido de la entrada</label>
         <textarea id="entry-body" class="entry-body" placeholder="Escribe aquí... ¿qué pasó hoy? ¿qué sentiste? ¿qué aprendiste?"></textarea>
 
         <footer class="entry-footer">
           <span id="word-count" class="word-count">0 palabras</span>
           <div class="footer-actions">
-            <button id="delete-btn" class="btn-danger">Eliminar</button>
-            <button id="save-btn" class="btn-save">Guardar</button>
+            <button id="delete-btn" class="btn-danger" type="button">Eliminar</button>
+            <button id="save-btn" class="btn-save" type="button">Guardar</button>
           </div>
         </footer>
 
@@ -80,3 +109,4 @@
   <script src="app.js"></script>
 </body>
 </html>
+
