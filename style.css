@@ -1,26 +1,28 @@
 /* ============================================================
-   MI DIARIO — hoja de estilos
+   MI DIARIO — hoja de estilos (tema claro)
    Para personalizar colores, tipografías y estados de ánimo,
    busca las secciones marcadas con "PERSONALIZA AQUÍ" más abajo.
    ============================================================ */
 
 :root {
   /* ---------- PERSONALIZA AQUÍ: paleta de colores ---------- */
-  --bg-page:      #EEF1E8;   /* fondo general — verde salvia claro */
-  --bg-spine:     #26323A;   /* barra lateral — tinta azul-noche  */
-  --bg-paper:     #FBFAF6;   /* la "hoja" donde escribes          */
-  --ink:          #2B3A42;   /* texto principal                   */
-  --ink-soft:     #6B7A75;   /* texto secundario / metadatos      */
-  --accent:       #C97B84;   /* rosa polvo — botones, resaltados  */
+  --bg-page:      #F6F4EE;   /* fondo general — marfil cálido       */
+  --bg-spine:     #FFFFFF;   /* barra lateral — blanco               */
+  --bg-spine-hover: #F0EEE6; /* hover de las tarjetas en la barra    */
+  --bg-paper:     #FFFFFF;   /* la "hoja" donde escribes             */
+  --ink:          #2B3A42;   /* texto principal                      */
+  --ink-soft:     #7C8983;   /* texto secundario / metadatos         */
+  --accent:       #C97B84;   /* rosa polvo — botones, resaltados     */
   --accent-dark:  #A85F68;
-  --thread:       #9BAF97;   /* línea del "hilo" en la barra lateral */
-  --line:         #DDE3D6;
+  --thread:       #7C9A76;   /* línea del "hilo" en la barra lateral */
+  --line:         #E6E2D8;
+  --border:       #E2DFD3;
 
   /* colores de los 5 estados de ánimo — cambia libremente */
-  --mood-radiante:  #E8B86D;
-  --mood-tranquila: #9BAF97;
-  --mood-neutral:   #B9BDC2;
-  --mood-cansada:   #8CA0C4;
+  --mood-radiante:  #D89A44;
+  --mood-tranquila: #7C9A76;
+  --mood-neutral:   #9BA3AB;
+  --mood-cansada:   #6E86AE;
   --mood-dificil:   #A8697A;
 
   /* ---------- PERSONALIZA AQUÍ: tipografías ---------- */
@@ -49,7 +51,8 @@ html, body {
 /* ============ SPINE (sidebar) ============ */
 .spine {
   background: var(--bg-spine);
-  color: #EDEFEA;
+  color: var(--ink);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   padding: 28px 20px;
@@ -70,7 +73,7 @@ html, body {
     var(--thread) 0 6px,
     transparent 6px 12px
   );
-  opacity: 0.45;
+  opacity: 0.5;
 }
 
 .spine-top { margin-bottom: 18px; }
@@ -81,6 +84,7 @@ html, body {
   font-size: 1.6rem;
   margin: 0;
   letter-spacing: 0.01em;
+  color: var(--ink);
 }
 
 .tagline {
@@ -97,7 +101,7 @@ html, body {
   font-weight: 600;
   font-size: 0.9rem;
   background: var(--accent);
-  color: #26232A;
+  color: #FFFFFF;
   border: none;
   border-radius: 8px;
   padding: 11px 14px;
@@ -105,20 +109,20 @@ html, body {
   margin-bottom: 16px;
   transition: transform 0.15s ease, background 0.15s ease;
 }
-.btn-new:hover { background: var(--accent-dark); color: #fff; transform: translateY(-1px); }
+.btn-new:hover { background: var(--accent-dark); transform: translateY(-1px); }
 
 .search-wrap { margin-bottom: 10px; }
 #search-input {
   width: 100%;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: #EDEFEA;
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  color: var(--ink);
   border-radius: 6px;
   padding: 8px 10px;
   font-family: var(--font-body);
   font-size: 0.85rem;
 }
-#search-input::placeholder { color: #8B958F; }
+#search-input::placeholder { color: #A7ADA5; }
 
 .entry-thread {
   flex: 1;
@@ -127,7 +131,7 @@ html, body {
   margin-top: 6px;
 }
 .entry-thread::-webkit-scrollbar { width: 5px; }
-.entry-thread::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+.entry-thread::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
 .entry-card {
   position: relative;
@@ -137,8 +141,8 @@ html, body {
   margin-bottom: 4px;
   transition: background 0.15s ease;
 }
-.entry-card:hover { background: rgba(255,255,255,0.06); }
-.entry-card.active { background: rgba(255,255,255,0.1); }
+.entry-card:hover { background: var(--bg-spine-hover); }
+.entry-card.active { background: var(--bg-spine-hover); box-shadow: inset 2px 0 0 var(--accent); }
 
 .entry-card .mood-mark {
   position: absolute;
@@ -153,7 +157,7 @@ html, body {
   font-family: var(--font-display);
   font-size: 0.95rem;
   font-weight: 500;
-  color: #F3F4EF;
+  color: var(--ink);
   margin-bottom: 2px;
   white-space: nowrap;
   overflow: hidden;
@@ -162,13 +166,13 @@ html, body {
 .entry-card .card-date {
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  color: #9AA39B;
+  color: var(--ink-soft);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 .entry-card .card-snippet {
   font-size: 0.75rem;
-  color: #B9C0B8;
+  color: var(--ink-soft);
   margin-top: 3px;
   white-space: nowrap;
   overflow: hidden;
@@ -176,14 +180,14 @@ html, body {
 }
 
 .empty-thread {
-  color: #8B958F;
+  color: var(--ink-soft);
   font-size: 0.82rem;
   padding: 10px 4px;
   line-height: 1.5;
 }
 
 .spine-bottom {
-  border-top: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid var(--border);
   padding-top: 14px;
   margin-top: 10px;
   display: flex;
@@ -193,8 +197,8 @@ html, body {
 
 .btn-ghost {
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.18);
-  color: #C9CFC7;
+  border: 1px solid var(--border);
+  color: var(--ink-soft);
   font-family: var(--font-body);
   font-size: 0.78rem;
   padding: 8px 10px;
@@ -203,7 +207,7 @@ html, body {
   text-align: center;
   display: block;
 }
-.btn-ghost:hover { border-color: var(--accent); color: #fff; }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent-dark); }
 .import-label { position: relative; }
 
 /* ============ PAGE (editor) ============ */
@@ -222,7 +226,8 @@ html, body {
   min-height: 100%;
   border-radius: 12px;
   padding: 44px 48px 32px;
-  box-shadow: 0 1px 3px rgba(43,58,66,0.06), 0 12px 32px rgba(43,58,66,0.06);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(43,58,66,0.04), 0 12px 32px rgba(43,58,66,0.04);
   display: flex;
   flex-direction: column;
 }
@@ -262,12 +267,12 @@ html, body {
   border: none;
   font-size: 1.1rem;
   cursor: pointer;
-  opacity: 0.35;
+  opacity: 0.4;
   transition: opacity 0.15s ease, transform 0.15s ease;
   padding: 0;
   line-height: 1;
 }
-.mood-dot:hover { opacity: 0.7; transform: scale(1.15); }
+.mood-dot:hover { opacity: 0.75; transform: scale(1.15); }
 .mood-dot.selected { opacity: 1; transform: scale(1.2); }
 
 .mood-dot[data-mood="radiante"]  { color: var(--mood-radiante); }
@@ -341,7 +346,7 @@ html, body {
   transition: background 0.15s ease, color 0.15s ease;
 }
 
-.btn-save { background: var(--ink); color: #FBFAF6; }
+.btn-save { background: var(--ink); color: #FFFFFF; }
 .btn-save:hover { background: var(--accent-dark); }
 
 .btn-danger { background: transparent; color: var(--ink-soft); }
